@@ -1,0 +1,26 @@
+pipeline {
+    agent {
+        docker {
+            image 'node:16.19.0'
+        }
+    }
+    stages {
+        stage('checkout') {
+            steps {
+                checkout changelog: false,
+                scm: scmGit(branches: [[ name: 'master']],
+                            userRemoteConfigs: [[ credentialsId: 'e37dc706-e46e-4f64-9da5-91b46c672236',
+                                                    url: 'https://github.com/ducluanxutrieu/demo_devops' ]])
+            }
+        }
+        stage('Build package') {
+            steps {
+                sh '''
+                    npm install
+                    npm run build
+
+                '''
+            }
+        }
+    }
+}
